@@ -25,6 +25,3 @@ dist-ssr
 .env
 uploads
 .bolt
-docker-compose.yml
-Dockerfile
-Dockerfile.frontend
