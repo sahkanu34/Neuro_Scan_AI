@@ -7,6 +7,16 @@ interface ClassificationResultProps {
   result: ScanResult;
 }
 
+// Assign a unique color for each class for the probability bar
+const PROBABILITY_BAR_COLORS: Record<string, string> = {
+  glioma: 'bg-red-500',
+  meningioma: 'bg-yellow-500',
+  pituitary: 'bg-purple-500',
+  no_tumor: 'bg-green-500',
+  // fallback
+  unknown: 'bg-gray-400'
+};
+
 const CLASSIFICATION_LABELS: Record<string, { name: string; icon: React.ReactNode }> = {
   glioma: { 
     name: 'Glioma', 
@@ -59,6 +69,8 @@ const ClassificationResult: React.FC<ClassificationResultProps> = ({ result }) =
             <h4 className="text-sm font-medium text-gray-700 mb-2">Probability Distribution</h4>
             {Object.entries(prediction.probabilities).map(([key, value]) => {
               const label = CLASSIFICATION_LABELS[key]?.name || key;
+              // Pick a color for the bar, fallback to gray if not found
+              const barColor = PROBABILITY_BAR_COLORS[key] || PROBABILITY_BAR_COLORS.unknown;
               return (
                 <div key={key} className="mb-2">
                   <div className="flex justify-between text-sm mb-1">
@@ -67,7 +79,7 @@ const ClassificationResult: React.FC<ClassificationResultProps> = ({ result }) =
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
                     <div 
-                      className={`bg-${getConfidenceColor(value)}-500 h-2.5 rounded-full`}
+                      className={`${barColor} h-2.5 rounded-full transition-all duration-300`}
                       style={{ width: `${value * 100}%` }}
                     ></div>
                   </div>
